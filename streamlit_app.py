@@ -108,7 +108,7 @@ if 'category' in data.columns:
             names=cat_sales.index,
             values=cat_sales.values,
             title="Total Sales by Category (Current Price)",
-            hole=0.3
+            hole=0.3,
             color_discrete_sequence=color_palette
         )
         st.plotly_chart(fig_cat, use_container_width=True)
