@@ -25,7 +25,7 @@ data = load_data()
 # 🧼 3. DATA PREPROCESSING
 # =========================
 # 🧼 Pastikan kolom tanggal diproses dengan benar
-if 'Purchased Date' in data.columns:
+if 'purchase_date' in data.columns:
     data['purchase_date'] = pd.to_datetime(data['purchase_date'], errors='coerce')
     data['Month_Name'] = data['purchase_date'].dt.strftime('%B')
 
@@ -57,7 +57,7 @@ col_a, col_b = st.columns(2)
 # -- Line chart: Rating by Month
 if 'Month_Name' in data.columns:
     with col_a:
-        monthly_avg = data.groupby('Month_Name')['Average_Customer_Rating'].mean().reindex(
+        monthly_avg = data.groupby('Month_Name')['customer_rating'].mean().reindex(
             ['January','February','March','April','May','June','July','August','September','October','November','December']
         )
         fig_month = px.line(
@@ -74,7 +74,7 @@ if 'Month_Name' in data.columns:
 # -- Line chart: Rating by Brand
 if 'Brand' in data.columns:
     with col_b:
-        brand_avg = data.groupby('Brand')['Average_Customer_Rating'].mean().sort_values(ascending=False)
+        brand_avg = data.groupby('brand')['customer_rating'].mean().sort_values(ascending=False)
         fig_brand_rating = px.line(
             brand_avg,
             x=brand_avg.index,
@@ -92,9 +92,9 @@ if 'Brand' in data.columns:
 col_c, col_d, col_e = st.columns([1,1,1.2])
 
 # -- Pie chart: Sales by Category
-if 'Category' in data.columns:
+if 'category' in data.columns:
     with col_c:
-        cat_sales = data.groupby('Category')['Current_Price'].sum()
+        cat_sales = data.groupby('category')['current_price'].sum()
         fig_cat = px.pie(
             names=cat_sales.index,
             values=cat_sales.values,
@@ -104,9 +104,9 @@ if 'Category' in data.columns:
         st.plotly_chart(fig_cat, use_container_width=True)
 
 # -- Bar chart: Sales by Season
-if 'Season' in data.columns:
+if 'season' in data.columns:
     with col_d:
-        season_sales = data.groupby('Season')['Current_Price'].sum()
+        season_sales = data.groupby('season')['current_price'].sum()
         fig_season = px.bar(
             x=season_sales.index,
             y=season_sales.values,
@@ -118,9 +118,9 @@ if 'Season' in data.columns:
         st.plotly_chart(fig_season, use_container_width=True)
 
 # -- Bar chart: Sales by Brand
-if 'Brand' in data.columns:
+if 'brand' in data.columns:
     with col_e:
-        brand_sales = data.groupby('Brand')['Current_Price'].sum().sort_values(ascending=False)
+        brand_sales = data.groupby('brand')['current_price'].sum().sort_values(ascending=False)
         fig_brand = px.bar(
             x=brand_sales.values,
             y=brand_sales.index,
