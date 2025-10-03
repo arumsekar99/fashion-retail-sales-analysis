@@ -117,20 +117,13 @@ if 'category' in data.columns:
 if 'season' in data.columns:
     with col_d:
         season_sales = data.groupby('season')['current_price'].sum()
-        # 🎨 Palet warna kustom (bisa kamu ganti sesuka hati)
-        color_palette = [
-            "#B33B3B",  # maroon / merah tua
-            "#E07A5F",  # coral orange
-            "#F4A261",  # orange
-            "#E9C46A",  # soft yellow
-        ]
         fig_season = px.bar(
             x=season_sales.index,
             y=season_sales.values,
             text=season_sales.values,
             title="Total Sales by Season (Current Price)"
         )
-        fig_season.update_traces(marker_color=["#e76f51", "#f4a261", "#e9c46a", "#f4a261"], textposition='outside')
+        fig_season.update_traces(marker_color=["#B33B3B", "#E07A5F", "#F4A261", "#E9C46A"], textposition='outside')
         fig_season.update_layout(xaxis_title="", yaxis_title="Sales")
         st.plotly_chart(fig_season, use_container_width=True)
 
