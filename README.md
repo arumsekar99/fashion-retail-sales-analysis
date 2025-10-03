@@ -99,7 +99,7 @@ Proyek ini menganalisis data penjualan butik fashion yang mencakup atribut produ
 **Arum Sekar Mawarni**  
 📧 Email: [mawarniarumsekar99@gmail.com](mailto:mawarniarumsekar99@gmail.com)  
 📱 Phone: 085727177335  
-💼 LinkedIn: [LinkedIn Profile](#) *(tambahkan link profilmu di sini)*
+💼 LinkedIn: [LinkedIn Profile](#) *([https://www.linkedin.com/in/arumsekarmawarni/])*
 
 ---
 
@@ -112,7 +112,7 @@ Terima kasih kepada para mentor & teman-teman bootcamp atas bimbingan dan dukung
 ## 📌 Preview Dashboard
 *(Tambahkan screenshot dashboard di bawah ini)*
 
-![Dashboard Preview](dashboard-preview.png)
+![Dashboard Preview](Fashion_Retail_Analysis_Dashboard.png)
 
 ---
 
