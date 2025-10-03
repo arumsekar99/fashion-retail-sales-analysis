@@ -95,11 +95,21 @@ col_c, col_d, col_e = st.columns([1,1,1.2])
 if 'category' in data.columns:
     with col_c:
         cat_sales = data.groupby('category')['current_price'].sum()
+        # 🎨 Palet warna kustom (bisa kamu ganti sesuka hati)
+        color_palette = [
+            "#B33B3B",  # maroon / merah tua
+            "#E07A5F",  # coral orange
+            "#F4A261",  # orange
+            "#E9C46A",  # soft yellow
+            "#2A9D8F",  # teal
+            "#264653"   # dark blue
+        ]
         fig_cat = px.pie(
             names=cat_sales.index,
             values=cat_sales.values,
             title="Total Sales by Category (Current Price)",
             hole=0.3
+            color_discrete_sequence=color_palette
         )
         st.plotly_chart(fig_cat, use_container_width=True)
 
