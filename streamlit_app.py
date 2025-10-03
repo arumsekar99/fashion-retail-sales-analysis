@@ -49,6 +49,23 @@ with col2:
 with col3:
     st.metric("Return Rate", f"{return_rate:.2f}")
 
+# 🧭 Filter Dashboard - Is Returned
+# =========================
+
+if 'is_returned' in data.columns:
+    st.sidebar.subheader("🔎 Filter Data")
+    returned_filter = st.sidebar.radio(
+        "Tampilkan data:",
+        options=["All", "Returned Only (True)", "Non-Returned Only (False)"],
+        index=0
+    )
+
+    # 🔸 Terapkan filter ke dataset
+    if returned_filter == "Returned Only (True)":
+        data = data[data['is_returned'] == True]
+    elif returned_filter == "Non-Returned Only (False)":
+        data = data[data['is_returned'] == False]
+
 # =========================
 # 📈 6. CHARTS — Top Row
 # =========================
