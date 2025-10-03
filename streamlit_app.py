@@ -72,7 +72,7 @@ if 'Month_Name' in data.columns:
         st.plotly_chart(fig_month, use_container_width=True)
 
 # -- Line chart: Rating by Brand
-if 'Brand' in data.columns:
+if 'brand' in data.columns:
     with col_b:
         brand_avg = data.groupby('brand')['customer_rating'].mean().sort_values(ascending=False)
         fig_brand_rating = px.line(
