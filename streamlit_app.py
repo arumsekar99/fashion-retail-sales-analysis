@@ -127,17 +127,49 @@ if 'season' in data.columns:
         fig_season.update_layout(xaxis_title="", yaxis_title="Sales")
         st.plotly_chart(fig_season, use_container_width=True)
 
-# -- Bar chart: Sales by Brand
-if 'brand' in data.columns:
+# =========================
+# 📊 Bar chart: Sales by Brand (Gradient Color)
+# =========================
+if 'brand' in data.columns and 'current_price' in data.columns:
     with col_e:
-        brand_sales = data.groupby('brand')['current_price'].sum().sort_values(ascending=False)
+        # 🔸 Hitung total penjualan per brand
+        brand_sales = (
+            data.groupby('brand')['current_price']
+            .sum()
+            .sort_values(ascending=True)  # ascending supaya bar paling atas = paling kecil
+        ).reset_index()
+
+        brand_sales.columns = ['brand', 'total_sales']
+
+        # 📊 Buat bar chart horizontal dengan gradient color
         fig_brand = px.bar(
-            x=brand_sales.values,
-            y=brand_sales.index,
+            brand_sales,
+            x='total_sales',
+            y='brand',
             orientation='h',
-            text=brand_sales.values,
-            title="Total Sales by Brand (Current Price)"
+            text='total_sales',
+            title="🏷️ Total Sales by Brand (Current Price)",
+            color='total_sales',  # ⬅️ inilah kunci gradient!
+            color_continuous_scale=[
+                "#264653",  # biru tua untuk sales kecil
+                "#2A9D8F",
+                "#F4A261",
+                "#E07A5F",
+                "#B33B3B"   # merah tua untuk sales besar
+            ]
         )
-        fig_brand.update_traces(marker_color="#e07a5f", textposition='outside')
-        fig_brand.update_layout(xaxis_title="Sales", yaxis_title="")
+
+        # 🪄 Styling
+        fig_brand.update_traces(
+            texttemplate='%{text:.0f}',
+            textposition='outside'
+        )
+        fig_brand.update_layout(
+            xaxis_title="Sales",
+            yaxis_title="",
+            plot_bgcolor='white',
+            coloraxis_colorbar=dict(title="Total Sales"),
+            yaxis={'categoryorder': 'total ascending'}
+        )
+
         st.plotly_chart(fig_brand, use_container_width=True)
