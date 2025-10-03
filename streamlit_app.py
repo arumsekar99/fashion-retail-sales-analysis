@@ -24,10 +24,10 @@ data = load_data()
 # =========================
 # 🧼 3. DATA PREPROCESSING
 # =========================
-# Pastikan Month bisa diproses
-if 'Month' in data.columns:
-    data['Month'] = pd.to_datetime(data['Month'], errors='coerce')
-    data['Month_Name'] = data['Month'].dt.strftime('%B')
+ 🧼 Pastikan kolom tanggal diproses dengan benar
+if 'Purchased Date' in data.columns:
+    data['purchase_date'] = pd.to_datetime(data['purchase_date'], errors='coerce')
+    data['Month_Name'] = data['purchase_date'].dt.strftime('%B')
 
 # =========================
 # 🧾 4. HEADER SECTION
@@ -37,9 +37,9 @@ st.title("👗 Fashion Boutique — Sales, Returns & Customer Insights")
 # =========================
 # 🧮 5. KPI METRICS (pakai Current_Price)
 # =========================
-total_sales = data['Current_Price'].sum()
-avg_rating = data['Average_Customer_Rating'].mean()
-return_rate = data['Return_Flag'].mean() if 'Return_Flag' in data.columns else 0
+total_sales = data['current_price'].sum()
+avg_rating = data['customer_rating'].mean()
+return_rate = data['is_returned'].mean() if 'is_returned' in data.columns else 0
 
 col1, col2, col3 = st.columns(3)
 with col1:
