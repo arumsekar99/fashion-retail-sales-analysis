@@ -24,7 +24,7 @@ data = load_data()
 # =========================
 # 🧼 3. DATA PREPROCESSING
 # =========================
- 🧼 Pastikan kolom tanggal diproses dengan benar
+🧼 Pastikan kolom tanggal diproses dengan benar
 if 'Purchased Date' in data.columns:
     data['purchase_date'] = pd.to_datetime(data['purchase_date'], errors='coerce')
     data['Month_Name'] = data['purchase_date'].dt.strftime('%B')
