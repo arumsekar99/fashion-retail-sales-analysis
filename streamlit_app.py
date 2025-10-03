@@ -49,22 +49,25 @@ with col2:
 with col3:
     st.metric("Return Rate", f"{return_rate:.2f}")
 
-# 🧭 Filter Dashboard - Is Returned
 # =========================
-
+# 🧭 Filter Dashboard - is_returned (Multiselect)
+# =========================
 if 'is_returned' in data.columns:
-    st.sidebar.subheader("🔎 Filter Data")
-    returned_filter = st.sidebar.radio(
-        "Tampilkan data:",
-        options=["All", "Returned Only (True)", "Non-Returned Only (False)"],
-        index=0
+    st.sidebar.subheader("🔎 Filter Data - Returned Status")
+
+    # Ambil semua nilai unik (True/False) dari kolom is_returned
+    returned_options = data['is_returned'].dropna().unique().tolist()
+
+    # Buat multiselect filter
+    selected_returned = st.sidebar.multiselect(
+        "Returned Status",
+        options=returned_options,
+        default=returned_options
     )
 
-    # 🔸 Terapkan filter ke dataset
-    if returned_filter == "Returned Only (True)":
-        data = data[data['is_returned'] == True]
-    elif returned_filter == "Non-Returned Only (False)":
-        data = data[data['is_returned'] == False]
+    # Terapkan filter ke dataset
+    if selected_returned:
+        data = data[data['is_returned'].isin(selected_returned)]
 
 # =========================
 # 📈 6. CHARTS — Top Row
