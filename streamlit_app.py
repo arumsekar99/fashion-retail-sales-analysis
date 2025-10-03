@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 
 # =========================
 # 🧭 1. PAGE CONFIG
@@ -25,10 +24,10 @@ data = load_data()
 # =========================
 # 🧼 3. DATA PREPROCESSING
 # =========================
-# Pastikan nama kolom sesuai dataset
-# (Silakan cek dengan st.write(data.columns) kalau error)
-data['Month'] = pd.to_datetime(data['Month'], errors='coerce')
-data['Month_Name'] = data['Month'].dt.strftime('%B')
+# Pastikan Month bisa diproses
+if 'Month' in data.columns:
+    data['Month'] = pd.to_datetime(data['Month'], errors='coerce')
+    data['Month_Name'] = data['Month'].dt.strftime('%B')
 
 # =========================
 # 🧾 4. HEADER SECTION
@@ -36,15 +35,15 @@ data['Month_Name'] = data['Month'].dt.strftime('%B')
 st.title("👗 Fashion Boutique — Sales, Returns & Customer Insights")
 
 # =========================
-# 🧮 5. KPI METRICS
+# 🧮 5. KPI METRICS (pakai Current_Price)
 # =========================
-total_sales = data['Total_Sales'].sum()
+total_sales = data['Current_Price'].sum()
 avg_rating = data['Average_Customer_Rating'].mean()
-return_rate = data['Return_Flag'].mean()
+return_rate = data['Return_Flag'].mean() if 'Return_Flag' in data.columns else 0
 
 col1, col2, col3 = st.columns(3)
 with col1:
-    st.metric("Total Sales", f"{total_sales:,.0f}")
+    st.metric("Total Sales (Current Price)", f"{total_sales:,.0f}")
 with col2:
     st.metric("Avg of Customer Rate", f"{avg_rating:.2f}")
 with col3:
@@ -56,34 +55,36 @@ with col3:
 col_a, col_b = st.columns(2)
 
 # -- Line chart: Rating by Month
-with col_a:
-    monthly_avg = data.groupby('Month_Name')['Average_Customer_Rating'].mean().reindex(
-        ['January','February','March','April','May','June','July','August','September','October','November','December']
-    )
-    fig_month = px.line(
-        monthly_avg,
-        x=monthly_avg.index,
-        y=monthly_avg.values,
-        markers=True,
-        title="Average of Customer Rating by Month"
-    )
-    fig_month.update_traces(line=dict(color="#b33b3b", width=3))
-    fig_month.update_layout(xaxis_title="", yaxis_title="Rating")
-    st.plotly_chart(fig_month, use_container_width=True)
+if 'Month_Name' in data.columns:
+    with col_a:
+        monthly_avg = data.groupby('Month_Name')['Average_Customer_Rating'].mean().reindex(
+            ['January','February','March','April','May','June','July','August','September','October','November','December']
+        )
+        fig_month = px.line(
+            monthly_avg,
+            x=monthly_avg.index,
+            y=monthly_avg.values,
+            markers=True,
+            title="Average of Customer Rating by Month"
+        )
+        fig_month.update_traces(line=dict(color="#b33b3b", width=3))
+        fig_month.update_layout(xaxis_title="", yaxis_title="Rating")
+        st.plotly_chart(fig_month, use_container_width=True)
 
 # -- Line chart: Rating by Brand
-with col_b:
-    brand_avg = data.groupby('Brand')['Average_Customer_Rating'].mean().sort_values(ascending=False)
-    fig_brand_rating = px.line(
-        brand_avg,
-        x=brand_avg.index,
-        y=brand_avg.values,
-        markers=True,
-        title="Average of Customer Rating by Brand"
-    )
-    fig_brand_rating.update_traces(line=dict(color="#b33b3b", width=3))
-    fig_brand_rating.update_layout(xaxis_title="", yaxis_title="Rating")
-    st.plotly_chart(fig_brand_rating, use_container_width=True)
+if 'Brand' in data.columns:
+    with col_b:
+        brand_avg = data.groupby('Brand')['Average_Customer_Rating'].mean().sort_values(ascending=False)
+        fig_brand_rating = px.line(
+            brand_avg,
+            x=brand_avg.index,
+            y=brand_avg.values,
+            markers=True,
+            title="Average of Customer Rating by Brand"
+        )
+        fig_brand_rating.update_traces(line=dict(color="#b33b3b", width=3))
+        fig_brand_rating.update_layout(xaxis_title="", yaxis_title="Rating")
+        st.plotly_chart(fig_brand_rating, use_container_width=True)
 
 # =========================
 # 📊 7. CHARTS — Bottom Row
@@ -91,39 +92,42 @@ with col_b:
 col_c, col_d, col_e = st.columns([1,1,1.2])
 
 # -- Pie chart: Sales by Category
-with col_c:
-    cat_sales = data.groupby('Category')['Total_Sales'].sum()
-    fig_cat = px.pie(
-        names=cat_sales.index,
-        values=cat_sales.values,
-        title="Total Sales by Category",
-        hole=0.3
-    )
-    st.plotly_chart(fig_cat, use_container_width=True)
+if 'Category' in data.columns:
+    with col_c:
+        cat_sales = data.groupby('Category')['Current_Price'].sum()
+        fig_cat = px.pie(
+            names=cat_sales.index,
+            values=cat_sales.values,
+            title="Total Sales by Category (Current Price)",
+            hole=0.3
+        )
+        st.plotly_chart(fig_cat, use_container_width=True)
 
 # -- Bar chart: Sales by Season
-with col_d:
-    season_sales = data.groupby('Season')['Total_Sales'].sum()
-    fig_season = px.bar(
-        x=season_sales.index,
-        y=season_sales.values,
-        text=season_sales.values,
-        title="Total Sales by Season"
-    )
-    fig_season.update_traces(marker_color=["#e76f51", "#f4a261", "#e9c46a", "#f4a261"], textposition='outside')
-    fig_season.update_layout(xaxis_title="", yaxis_title="Sales")
-    st.plotly_chart(fig_season, use_container_width=True)
+if 'Season' in data.columns:
+    with col_d:
+        season_sales = data.groupby('Season')['Current_Price'].sum()
+        fig_season = px.bar(
+            x=season_sales.index,
+            y=season_sales.values,
+            text=season_sales.values,
+            title="Total Sales by Season (Current Price)"
+        )
+        fig_season.update_traces(marker_color=["#e76f51", "#f4a261", "#e9c46a", "#f4a261"], textposition='outside')
+        fig_season.update_layout(xaxis_title="", yaxis_title="Sales")
+        st.plotly_chart(fig_season, use_container_width=True)
 
 # -- Bar chart: Sales by Brand
-with col_e:
-    brand_sales = data.groupby('Brand')['Total_Sales'].sum().sort_values(ascending=False)
-    fig_brand = px.bar(
-        x=brand_sales.values,
-        y=brand_sales.index,
-        orientation='h',
-        text=brand_sales.values,
-        title="Total Sales by Brand"
-    )
-    fig_brand.update_traces(marker_color="#e07a5f", textposition='outside')
-    fig_brand.update_layout(xaxis_title="Sales", yaxis_title="")
-    st.plotly_chart(fig_brand, use_container_width=True)
+if 'Brand' in data.columns:
+    with col_e:
+        brand_sales = data.groupby('Brand')['Current_Price'].sum().sort_values(ascending=False)
+        fig_brand = px.bar(
+            x=brand_sales.values,
+            y=brand_sales.index,
+            orientation='h',
+            text=brand_sales.values,
+            title="Total Sales by Brand (Current Price)"
+        )
+        fig_brand.update_traces(marker_color="#e07a5f", textposition='outside')
+        fig_brand.update_layout(xaxis_title="Sales", yaxis_title="")
+        st.plotly_chart(fig_brand, use_container_width=True)
