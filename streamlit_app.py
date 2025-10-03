@@ -117,6 +117,13 @@ if 'category' in data.columns:
 if 'season' in data.columns:
     with col_d:
         season_sales = data.groupby('season')['current_price'].sum()
+        # 🎨 Palet warna kustom (bisa kamu ganti sesuka hati)
+        color_palette = [
+            "#B33B3B",  # maroon / merah tua
+            "#E07A5F",  # coral orange
+            "#F4A261",  # orange
+            "#E9C46A",  # soft yellow
+        ]
         fig_season = px.bar(
             x=season_sales.index,
             y=season_sales.values,
